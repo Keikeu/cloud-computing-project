@@ -1,0 +1,114 @@
+html
+
+  head
+    title Projekt - Karolina Placek
+    style
+      include style.css
+  body
+
+    div.row
+      div.three.columns &nbsp;
+      div.six.columns
+
+
+        h3 Nowy węzeł
+
+        form(action="/postNode", method="post")
+
+          div.row
+            div.six.columns
+              label(for="name") Nazwa węzła
+              input.u-full-width(name="name", type="text")
+            div.six.columns
+              label(for="type") Typ węzła
+              select.u-full-width(name="type")
+                option(value="person" selected) Osoba
+                option(value="city") Miasto
+                option(value="country") Kraj
+          div.row
+            div.twelve.columns
+              input.button-primary.u-full-width(type="submit", value="Stwórz węzeł")
+              
+              
+        h3 Nowa relacja
+
+        form(action="/postRelationship", method="post")
+
+          div.row
+            div.four.columns
+              label(for="id1") Węzeł nr 1
+              select.u-full-width(name="id1")
+                each node in nodes
+                  option(value=node.uuid) #{node.name}
+            div.four.columns
+              label(for="type") Typ relacji
+              select.u-full-width(name="type")
+                option(value="person-person" selected) zna
+                option(value="person-city") podróżował/a do
+                option(value="city-country") leży w
+            div.four.columns
+              label(for="id2") Węzeł nr 2
+              select.u-full-width(name="id2")
+                each node in nodes
+                  option(value=node.uuid) #{node.name}
+          div.row
+            div.twelve.columns
+              input.button-primary.u-full-width(type="submit", value="Stwórz relację")
+
+
+        br
+        br
+        h3 Lista węzłów
+
+        if nodes.length == 0
+          p Brak węzłów.
+
+        if nodes.length > 0
+          table.u-full-width
+            thead
+              tr
+                th Typ
+                th Nazwa
+            tbody
+              each node in nodes
+                tr
+                  td= node.type
+                  td= node.name
+                  
+                  
+        h3 Lista relacji
+        
+
+        if rels.length == 0
+          p Brak relacji.
+
+        if rels.length > 0
+          table.u-full-width
+            thead
+              tr
+                th Nazwa 1
+                th Typ
+                th Nazwa 2
+            tbody
+              each rel in rels
+                tr
+                  td= rel.name1
+                  if rel.type == 'KNOWS'
+                    td zna
+                  if rel.type == 'VISITED'
+                    td podróżował/a do
+                  if rel.type == 'BELONGS'
+                    td leży w
+                  td= rel.name2
+
+        br
+        br
+        br
+        br
+        h3 Usuwanie
+
+        form(action="/clear", method="post")
+
+          div.row
+            div.twelve.columns
+              input.button-primary.u-full-width(type="submit", value="Usuń wszystkie węzły i relacje")
